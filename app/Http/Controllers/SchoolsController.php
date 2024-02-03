@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Schools;
 use App\Http\Requests\StoreSchoolsRequest;
 use App\Http\Requests\UpdateSchoolsRequest;
+use App\Http\Resources\Place\SchoolResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class SchoolsController extends Controller
@@ -16,8 +17,8 @@ class SchoolsController extends Controller
      */
     public function index()
     {
-        $school = Schools::paginate(20);
-        return response()->json(['data' => $school]);
+        $schools = Schools::paginate(20);
+        return response(SchoolResource::collection($schools));
     }
 
     
@@ -32,7 +33,7 @@ class SchoolsController extends Controller
     {
         $validated = $request->validated();
         $school = Schools::create($validated);
-        return response()->json(['message' => 'school added successfully', 'data' => $school], Response::HTTP_CREATED);
+        return response(new SchoolResource($school),Response::HTTP_CREATED);
     }
 
     /**
@@ -44,7 +45,7 @@ class SchoolsController extends Controller
     public function show($id)
     {
         $school = Schools::findOrFail($id);
-        return response()->json(['data'=>$school]);
+        return response(new SchoolResource($school));
     }
     /**
      * Update the specified resource in storage.
@@ -58,7 +59,7 @@ class SchoolsController extends Controller
         $request ->validated();
         $school = Schools::findOrFail($id);
         $school ->update($request->all());
-        return response()->json(['message'=>'school updated successfully','data'=>$school],Response::HTTP_OK);
+        return response(new SchoolResource($school),Response::HTTP_OK);
     }
 
     /**

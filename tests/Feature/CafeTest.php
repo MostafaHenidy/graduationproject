@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\Place\CafeResource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -21,13 +22,14 @@ class Cafetest extends TestCase
             $this->markTestSkipped('Not enough cafes in the database to run this test.');
         }
     }
-    public function test_example()
+    public function testCafeindex()
     {
-        
         $response = $this->get('/api/cafes');
         $response->assertOk();
         foreach ($this->cafes as $cafe) {
-            $response->assertJsonFragment($cafe->toArray());
+            $resource = new CafeResource($cafe);
+            $transfomedcafe = $resource->toArray(request());
+            $response->assertJsonFragment($transfomedcafe);
         }
     }
     public function testCafetore()
@@ -53,7 +55,9 @@ class Cafetest extends TestCase
         foreach ($this->cafes as $cafe) {
             $response = $this->get('/api/cafes/' . $cafe->id);
             $response->assertOk();
-            $response->assertJsonFragment($cafe->toArray());
+            $resource = new CafeResource($cafe);
+            $transfomedcafe = $resource->toArray(request());
+            $response->assertJsonFragment($transfomedcafe);
         }
     }
     public function testCafeupdate()

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Http\Requests\StoreSchoolsRequest;
+use App\Http\Resources\Place\SchoolResource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -23,13 +24,14 @@ class SchoolTest extends TestCase
         }
     }
 
-    public function test_example()
+    public function testSchoolindex()
     {
-
         $response = $this->get('/api/schools');
-        $response->assertOK();
+        $response->assertOk();
         foreach ($this->schools as $school) {
-            $response->assertJsonFragment($school->toArray());
+            $resource = new SchoolResource($school);
+            $transfomedschool = $resource->toArray(request());
+            $response->assertJsonFragment($transfomedschool);
         }
     }
     public function testSchoolshow()
@@ -39,7 +41,9 @@ class SchoolTest extends TestCase
         foreach ($this->schools as $school) {
             $response = $this->get('/api/schools/' . $school->id);
             $response->assertOK();
-            $response->assertJsonFragment($school->toArray());
+            $resource = new SchoolResource($school);
+            $transfomedschool = $resource->toArray(request());
+            $response->assertJsonFragment($transfomedschool);
         }
     }
     public function testschoolstore()

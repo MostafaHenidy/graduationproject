@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Jobs;
 use App\Http\Requests\StoreJobsRequest;
 use App\Http\Requests\UpdateJobsRequest;
+use App\Http\Resources\Place\JobResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class JobsController extends Controller
@@ -16,8 +17,8 @@ class JobsController extends Controller
      */
     public function index()
     {
-        $job = Jobs::paginate(20);
-        return response()->json(['data' => $job]);
+        $jobs = Jobs::paginate(20);
+        return response(JobResource::collection($jobs));
     }
 
 
@@ -31,7 +32,7 @@ class JobsController extends Controller
     {
         $validated = $request->validated();
         $job = Jobs::create($validated);
-        return response()->json(['message' => 'job added successfully', 'data' => $job], Response::HTTP_CREATED);
+        return response(new JobResource($job),Response::HTTP_CREATED);
     }
 
     /**
@@ -43,7 +44,7 @@ class JobsController extends Controller
     public function show($id)
     {
         $job = Jobs::findOrFail($id);
-        return response()->json(['data' => $job]);
+        return response(new JobResource($job));
     }
 
 
@@ -59,7 +60,7 @@ class JobsController extends Controller
         $request->validated();
         $job = Jobs::findOrFail($id);
         $job->update($request->all());
-        return response()->json(['message' => 'job updated successfully', 'data' => $job], Response::HTTP_OK);
+        return response(new JobResource($job),Response::HTTP_OK);
     }
 
     /**

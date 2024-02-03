@@ -15,28 +15,28 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('/profile/avatar', [AvatarController::class, 'update'])->name('avatar.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::resource('/hospitals', HospitalsController::class)->except(['create','edit'])
+Route::apiResource('/hospitals', HospitalsController::class)->except(['create','edit'])
     ->names([
         'store' => 'hospitals.store',
         'update' => 'hospitals.update',
         'delete' => 'hospitals.delete',
         'show' => 'hospitals.show',
     ]);
-Route::resource('/cafes', CafesController::class)->except(['create','edit'])
+Route::apiResource('/cafes', CafesController::class)->except(['create','edit'])
     ->names([
         'store' => 'cafes.store',
         'update' => 'cafes.update',
         'delete' => 'cafes.delete',
         'show' => 'cafes.show',
     ]);
-Route::resource('/jobs', JobsController::class)->except(['create','edit'])
+Route::apiResource('/jobs', JobsController::class)->except(['create','edit'])
     ->names([
         'store' => 'jobs.store',
         'update' => 'jobs.update',
         'delete' => 'jobs.delete',
         'show' => 'jobs.show',
     ]);
-Route::resource('/schools', SchoolsController::class)->except(['create','edit'])
+Route::apiResource('/schools', SchoolsController::class)->except(['create','edit'])
     ->names([
         'store' => 'schools.store',
         'update' => 'schools.update',

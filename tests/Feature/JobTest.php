@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\Place\JobResource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -21,13 +22,14 @@ class JobTest extends TestCase
             $this->markTestSkipped('Not enough jobs in the database to run this test.');
         }
     }
-    public function test_example()
+    public function testJobindex()
     {
-        
         $response = $this->get('/api/jobs');
         $response->assertOk();
         foreach ($this->jobs as $job) {
-            $response->assertJsonFragment($job->toArray());
+            $resource = new JobResource($job);
+            $transfomedjob = $resource->toArray(request());
+            $response->assertJsonFragment($transfomedjob);
         }
     }
     public function testjobstore()
@@ -53,7 +55,9 @@ class JobTest extends TestCase
         foreach ($this->jobs as $job) {
             $response = $this->get('/api/jobs/' . $job->id);
             $response->assertOk();
-            $response->assertJsonFragment($job->toArray());
+            $resource = new JobResource($job);
+            $transfomedjob = $resource->toArray(request());
+            $response->assertJsonFragment($transfomedjob);
         }
     }
     public function testJobupdate()

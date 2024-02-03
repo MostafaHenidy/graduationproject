@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\Place\HospitalResource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -21,12 +22,14 @@ class HospitalTest extends TestCase
         }
     }
 
-    public function test_example()
+    public function testHospitalindex()
     {
         $response = $this->get('/api/hospitals');
         $response->assertOk();
         foreach ($this->hospitals as $hospital) {
-            $response->assertJsonFragment($hospital->toArray());
+            $resource = new HospitalResource($hospital);
+            $transfomedHospital = $resource->toArray(request());
+            $response->assertJsonFragment($transfomedHospital);
         }
     }
     public function testhospitalstore()
@@ -44,13 +47,16 @@ class HospitalTest extends TestCase
         $response = $this->postJson('/api/hospitals', $newhospitalData);
         $response->assertCreated();
         $this->assertDatabaseHas('hospitals', $newhospitalData);
+        
     }
     public function testHospitalshow()
     {
         foreach ($this->hospitals as $hospital) {
             $response = $this->get('/api/hospitals/' . $hospital->id);
             $response->assertOk();
-            $response->assertJsonFragment($hospital->toArray());
+            $resource = new HospitalResource($hospital);
+            $transfomedHospital = $resource->toArray(request());
+            $response->assertJsonFragment($transfomedHospital);
         }
     }
     public function testHospitalupdate()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hospitals;
 use App\Http\Requests\StoreHospitalsRequest;
 use App\Http\Requests\UpdateHospitalsRequest;
+use App\Http\Resources\Place\HospitalResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class HospitalsController extends Controller
@@ -17,7 +18,8 @@ class HospitalsController extends Controller
     public function index()
     {
         $hospitals = Hospitals::paginate(20);
-        return response()->json(['data' => $hospitals]);
+        // return response()->json(['data' => $hospitals]);
+        return response(HospitalResource::collection($hospitals));
     }
     /**
      * Store a newly created resource in storage.
@@ -29,7 +31,8 @@ class HospitalsController extends Controller
     {
         $validated = $request->validated();
         $hospital = Hospitals::create($validated);
-        return response()->json(['message' => 'Hospital added successfully', 'data' => $hospital], Response::HTTP_CREATED);
+        return response(new HospitalResource($hospital),Response::HTTP_CREATED);
+        // return response()->json(['message' => 'Hospital added successfully', 'data' => $hospital], Response::HTTP_CREATED);
     }
 
     /**
@@ -41,7 +44,8 @@ class HospitalsController extends Controller
     public function show($id)
     {
         $hospital = Hospitals::findOrFail($id);
-        return response()->json(['data' => $hospital]);
+        // return response()->json(['data' => $hospital]);
+        return new HospitalResource($hospital);
     }
     /**
      * Update the specified resource in storage.
@@ -57,7 +61,8 @@ class HospitalsController extends Controller
         $hospital = Hospitals::findOrFail($id);
         $hospital->update($request->all());
 
-        return response()->json(['message' => 'Hospital updated successfully', 'data' => $hospital], Response::HTTP_OK);
+        // return response()->json(['message' => 'Hospital updated successfully', 'data' => $hospital], Response::HTTP_OK);
+        return response(new HospitalResource($hospital),Response::HTTP_OK);
     }
 
     /**
