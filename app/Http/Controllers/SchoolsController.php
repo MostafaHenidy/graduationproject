@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Schools;
 use App\Http\Requests\StoreSchoolsRequest;
 use App\Http\Requests\UpdateSchoolsRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class SchoolsController extends Controller
 {
@@ -29,9 +30,9 @@ class SchoolsController extends Controller
      */
     public function store(StoreSchoolsRequest $request)
     {
-        $request->validated();
-        $school = schools::create($request);
-        return response()->json(['message' => 'school added successfully', 'data' => $school], 201);
+        $validated = $request->validated();
+        $school = Schools::create($validated);
+        return response()->json(['message' => 'school added successfully', 'data' => $school], Response::HTTP_CREATED);
     }
 
     /**
@@ -57,7 +58,7 @@ class SchoolsController extends Controller
         $request ->validated();
         $school = Schools::findOrFail($id);
         $school ->update($request->all());
-        return response()->json(['message'=>'school updated successfully','data'=>$school],200);
+        return response()->json(['message'=>'school updated successfully','data'=>$school],Response::HTTP_OK);
     }
 
     /**
@@ -70,6 +71,6 @@ class SchoolsController extends Controller
     {
         $school = schools::findOrFail($id);
         $school->delete();
-        return response()->json(['message','school deleted successfully',],200);
+        return response()->json(['message','school deleted successfully',],Response::HTTP_NO_CONTENT);
     }
 }

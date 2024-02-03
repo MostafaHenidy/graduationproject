@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Jobs;
 use App\Http\Requests\StoreJobsRequest;
 use App\Http\Requests\UpdateJobsRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class JobsController extends Controller
 {
@@ -28,9 +29,9 @@ class JobsController extends Controller
      */
     public function store(StoreJobsRequest $request)
     {
-        $request->validated();
-        $job = Jobs::create($request);
-        return response()->json(['message' => 'job added successfully', 'data' => $job], 201);
+        $validated = $request->validated();
+        $job = Jobs::create($validated);
+        return response()->json(['message' => 'job added successfully', 'data' => $job], Response::HTTP_CREATED);
     }
 
     /**
@@ -42,7 +43,7 @@ class JobsController extends Controller
     public function show($id)
     {
         $job = Jobs::findOrFail($id);
-        return response()->json(['data'=>$job]);
+        return response()->json(['data' => $job]);
     }
 
 
@@ -55,10 +56,10 @@ class JobsController extends Controller
      */
     public function update(UpdateJobsRequest $request, $id)
     {
-        $request ->validated();
+        $request->validated();
         $job = Jobs::findOrFail($id);
-        $job ->update($request->all());
-        return response()->json(['message'=>'job updated successfully','data'=>$job],200);
+        $job->update($request->all());
+        return response()->json(['message' => 'job updated successfully', 'data' => $job], Response::HTTP_OK);
     }
 
     /**
@@ -71,6 +72,6 @@ class JobsController extends Controller
     {
         $job = jobs::findOrFail($id);
         $job->delete();
-        return response()->json(['message','job deleted successfully',],200);
+        return response()->json(['message', 'job deleted successfully',], Response::HTTP_NO_CONTENT);
     }
 }

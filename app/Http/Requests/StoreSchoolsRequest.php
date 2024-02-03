@@ -13,7 +13,7 @@ class StoreSchoolsRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,6 +29,7 @@ class StoreSchoolsRequest extends FormRequest
             'body' => 'required|string|min:10',
             'info' => 'required',
             'cover_image' => 'required',
+            'user_id' => 'required|integer|exists:users,id',
         ];
     }
 }

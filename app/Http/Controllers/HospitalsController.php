@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hospitals;
 use App\Http\Requests\StoreHospitalsRequest;
 use App\Http\Requests\UpdateHospitalsRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class HospitalsController extends Controller
 {
@@ -26,9 +27,9 @@ class HospitalsController extends Controller
      */
     public function store(StoreHospitalsRequest $request)
     {
-        $request->validated();
-        $hospital = Hospitals::create($request);
-        return response()->json(['message' => 'Hospital added successfully', 'data' => $hospital], 201);
+        $validated = $request->validated();
+        $hospital = Hospitals::create($validated);
+        return response()->json(['message' => 'Hospital added successfully', 'data' => $hospital], Response::HTTP_CREATED);
     }
 
     /**
@@ -39,7 +40,7 @@ class HospitalsController extends Controller
      */
     public function show($id)
     {
-        $hospital = Hospitals::find($id);
+        $hospital = Hospitals::findOrFail($id);
         return response()->json(['data' => $hospital]);
     }
     /**
@@ -56,7 +57,7 @@ class HospitalsController extends Controller
         $hospital = Hospitals::findOrFail($id);
         $hospital->update($request->all());
 
-        return response()->json(['message' => 'Hospital updated successfully', 'data' => $hospital], 200);
+        return response()->json(['message' => 'Hospital updated successfully', 'data' => $hospital], Response::HTTP_OK);
     }
 
     /**
@@ -69,6 +70,6 @@ class HospitalsController extends Controller
     {
         $hospital = Hospitals::findOrFail($id);
         $hospital->delete();
-        return response()->json(['message', 'Hospital deleted successfully',], 200);
+        return response()->json(['message', 'Hospital deleted successfully',], Response::HTTP_NO_CONTENT);
     }
 }

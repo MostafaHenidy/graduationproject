@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cafes;
 use App\Http\Requests\StoreCafesRequest;
 use App\Http\Requests\UpdateCafesRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class CafesController extends Controller
 {
@@ -28,9 +29,9 @@ class CafesController extends Controller
      */
     public function store(StoreCafesRequest $request)
     {
-        $request->validated();
-        $cafe = Cafes::create($request);
-        return response()->json(['message' => 'cafe added successfully', 'data' => $cafe], 201);
+        $validated = $request->validated();
+        $cafe = Cafes::create($validated);
+        return response()->json(['message' => 'cafe added successfully', 'data' => $cafe], Response::HTTP_CREATED);
     }
 
     /**
@@ -57,7 +58,7 @@ class CafesController extends Controller
         $request ->validated();
         $cafe = Cafes::findOrFail($id);
         $cafe ->update($request->all());
-        return response()->json(['message'=>'cafe updated successfully','data'=>$cafe],200);
+        return response()->json(['message'=>'cafe updated successfully','data'=>$cafe],Response::HTTP_OK);
     }
 
     /**
@@ -70,6 +71,6 @@ class CafesController extends Controller
     {
         $cafe = Cafes::findOrFail($id);
         $cafe->delete();
-        return response()->json(['message','cafe deleted successfully',],200);
+        return response()->json(['message','cafe deleted successfully',],Response::HTTP_NO_CONTENT);
     }
 }

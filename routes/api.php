@@ -17,24 +17,28 @@ Route::middleware('auth:api')->group(function () {
 });
 Route::resource('/hospitals', HospitalsController::class)->except(['create','edit'])
     ->names([
+        'store' => 'hospitals.store',
         'update' => 'hospitals.update',
         'delete' => 'hospitals.delete',
         'show' => 'hospitals.show',
     ]);
 Route::resource('/cafes', CafesController::class)->except(['create','edit'])
     ->names([
+        'store' => 'cafes.store',
         'update' => 'cafes.update',
         'delete' => 'cafes.delete',
         'show' => 'cafes.show',
     ]);
 Route::resource('/jobs', JobsController::class)->except(['create','edit'])
     ->names([
+        'store' => 'jobs.store',
         'update' => 'jobs.update',
         'delete' => 'jobs.delete',
         'show' => 'jobs.show',
     ]);
 Route::resource('/schools', SchoolsController::class)->except(['create','edit'])
     ->names([
+        'store' => 'schools.store',
         'update' => 'schools.update',
         'delete' => 'schools.delete',
         'show' => 'schools.show',
