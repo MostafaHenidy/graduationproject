@@ -9,7 +9,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Profile\AvatarController;
 use App\Models\User;
-use OpenAI\Laravel\Facades\OpenAI;
+use Illuminate\Support\Facades\Auth;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,26 +56,18 @@ Route::resource('/schools', SchoolsController::class)->except(['create', 'edit']
         'show' => 'schools.show',
     ]);
 
-Route::get('/auth/redirect', function () {
+Route::post('/auth/redirect', function () {
     return Socialite::driver('github')->redirect();
-});
+})->name('login.github');
 Route::get('/auth/callback', function () {
-    $user = Socialite::driver('github')->user();
-    // User::updateOrCreate(['email' => $user->email],[
-    //     'name' => $user->name,
-    //     'password' => $user->password, 
-    // ]);
-    dd($user->email);
+    $githubUser = Socialite::driver('github')->user();
+    $user = User::firstOrCreate(['email' => $githubUser->email], [
+        'name' => $githubUser->name ?? $githubUser->nickname,
+        'password' => 'password',
+    ]);
+    Auth::login($user);
+    return redirect('/dashboard');
 });
 
-// Route::get('/openai',function(){
 
-
-// $result = OpenAI::completions()->create([
-//     'model' => 'text-davinci-003',
-//     'prompt' =>'PHP is',
-// ]);
-
-// echo $result['choices'][0]['text']; 
-// });
 require __DIR__ . '/auth.php';

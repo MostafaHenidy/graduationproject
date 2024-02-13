@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -43,17 +45,28 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function Hospitals(){
-        return $this->hasMany('App\Models\Hospitals');
-    }
-    public function Schools(){
-        return $this->hasMany('App\Models\Schools');
-    }
-    public function Jobs(){
-        return $this->hasMany('App\Models\Jobs');
-    }
-    public function Cafes(){
-        return $this->hasMany('App\Models\Cafes');
+
+    protected function passowrd(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => bcrypt($value)
+        );
     }
 
+    public function Hospitals()
+    {
+        return $this->hasMany('App\Models\Hospitals');
+    }
+    public function Schools()
+    {
+        return $this->hasMany('App\Models\Schools');
+    }
+    public function Jobs()
+    {
+        return $this->hasMany('App\Models\Jobs');
+    }
+    public function Cafes()
+    {
+        return $this->hasMany('App\Models\Cafes');
+    }
 }
