@@ -9,10 +9,10 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Schools;
 use App\Models\User;
-
+use Laravel\Sanctum\Sanctum;
 class SchoolTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     private $schools;
     public function setUp(): void
@@ -26,6 +26,8 @@ class SchoolTest extends TestCase
 
     public function testSchoolindex()
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $response = $this->get('/api/schools');
         $response->assertOk();
         foreach ($this->schools as $school) {
@@ -36,8 +38,8 @@ class SchoolTest extends TestCase
     }
     public function testSchoolshow()
     {
-
-
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->schools as $school) {
             $response = $this->get('/api/schools/' . $school->id);
             $response->assertOK();
@@ -49,6 +51,7 @@ class SchoolTest extends TestCase
     public function testschoolstore()
     {
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $newschoolData = [
             'title' => 'new school',
             'address' => '123 new school street',
@@ -64,8 +67,8 @@ class SchoolTest extends TestCase
     }
     public function testSchoolupdate()
     {
-
-
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->schools as $school) {
             $newData = [
                 'title' => 'new school title' . $school->id,
@@ -81,8 +84,8 @@ class SchoolTest extends TestCase
     }
     public function testSchooldelete()
     {
-
-
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->schools as $school) {
             $response = $this->delete('/api/schools/' . $school->id);
             $response->assertNoContent();

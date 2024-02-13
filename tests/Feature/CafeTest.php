@@ -8,12 +8,13 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Cafes;
 use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 
 class Cafetest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
-    private $cafes ; 
+    private $cafes;
     public function setUp(): void
     {
         parent::setUP();
@@ -24,6 +25,8 @@ class Cafetest extends TestCase
     }
     public function testCafeindex()
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $response = $this->get('/api/cafes');
         $response->assertOk();
         foreach ($this->cafes as $cafe) {
@@ -35,6 +38,7 @@ class Cafetest extends TestCase
     public function testCafetore()
     {
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $newcafeData = [
             'title' => 'new cafe',
             'address' => '123 new cafe street',
@@ -50,8 +54,9 @@ class Cafetest extends TestCase
     }
     public function testCafeshow()
     {
-        
-        
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
         foreach ($this->cafes as $cafe) {
             $response = $this->get('/api/cafes/' . $cafe->id);
             $response->assertOk();
@@ -62,8 +67,9 @@ class Cafetest extends TestCase
     }
     public function testCafeupdate()
     {
-        
-        
+
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->cafes as $cafe) {
             $newData = [
                 'title' => 'new Hospital title' . $cafe->id,
@@ -79,8 +85,8 @@ class Cafetest extends TestCase
     }
     public function testCafedelete()
     {
-        
-        
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->cafes as $cafe) {
             $response = $this->delete('/api/cafes/' . $cafe->id);
             $response->assertNoContent();

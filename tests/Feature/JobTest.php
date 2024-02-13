@@ -8,10 +8,11 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Jobs;
 use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 
 class JobTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     private $jobs;
     public function setUp(): void
@@ -24,6 +25,8 @@ class JobTest extends TestCase
     }
     public function testJobindex()
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $response = $this->get('/api/jobs');
         $response->assertOk();
         foreach ($this->jobs as $job) {
@@ -35,6 +38,8 @@ class JobTest extends TestCase
     public function testjobstore()
     {
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
         $newjobData = [
             'title' => 'new job',
             'address' => '123 new job street',
@@ -50,8 +55,8 @@ class JobTest extends TestCase
     }
     public function testjobshow()
     {
-        
-        
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->jobs as $job) {
             $response = $this->get('/api/jobs/' . $job->id);
             $response->assertOk();
@@ -62,8 +67,8 @@ class JobTest extends TestCase
     }
     public function testJobupdate()
     {
-        
-        
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->jobs as $job) {
             $newData = [
                 'title' => 'new job title' . $job->id,
@@ -79,8 +84,8 @@ class JobTest extends TestCase
     }
     public function testJobdelete()
     {
-        
-        
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->jobs as $job) {
             $response = $this->delete('/api/jobs/' . $job->id);
             $response->assertNoContent();

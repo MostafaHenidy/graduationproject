@@ -8,10 +8,10 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Hospitals;
 use App\Models\User;
-
+use Laravel\Sanctum\Sanctum;
 class HospitalTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
     private $hospitals;
     public function setUp(): void
     {
@@ -24,6 +24,8 @@ class HospitalTest extends TestCase
 
     public function testHospitalindex()
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $response = $this->get('/api/hospitals');
         $response->assertOk();
         foreach ($this->hospitals as $hospital) {
@@ -35,6 +37,7 @@ class HospitalTest extends TestCase
     public function testhospitalstore()
     {
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $newhospitalData = [
             'title' => 'new hospital',
             'address' => '123 new hospital street',
@@ -51,6 +54,8 @@ class HospitalTest extends TestCase
     }
     public function testHospitalshow()
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->hospitals as $hospital) {
             $response = $this->get('/api/hospitals/' . $hospital->id);
             $response->assertOk();
@@ -61,7 +66,8 @@ class HospitalTest extends TestCase
     }
     public function testHospitalupdate()
     {
-
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->hospitals as $hospital) {
             $newData = [
                 'title' => 'new Hospital title' . $hospital->id,
@@ -77,6 +83,8 @@ class HospitalTest extends TestCase
     }
     public function testHospitaldelete()
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         foreach ($this->hospitals as $hospital) {
             $response = $this->delete('/api/hospitals/' . $hospital->id);
             $response->assertNoContent();
