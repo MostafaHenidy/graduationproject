@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Profile\AvatarController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
+use OpenAI\Laravel\Facades\OpenAI;
 
 Route::get('/', function () {
     return view('welcome');
@@ -69,5 +69,15 @@ Route::get('/auth/callback', function () {
     return redirect('/dashboard');
 });
 
+// Route::get('/openai',function(){
+//     $result = OpenAI::chat()->create([
+//         'model' => 'gpt-3.5-turbo',
+//         'messages' => [
+//             ['role' => 'user', 'content' => 'Hello!'],
+//         ],
+//     ]);
+    
+//     echo $result->choices[0]->message->content; 
+// });
 
 require __DIR__ . '/auth.php';
